@@ -64,8 +64,8 @@ def get_data(links: []) -> []:
 
         # Получение прочих данных о жилье
         flat_other_data = [
-            get_flat_other_data(mid_name)
-            for mid_name in flat_soup.find_all(class_="apartment__mid_item-name")
+            get_flat_other_data(other_data)
+            for other_data in flat_soup.find_all(class_="apartment__mid_item-name")
         ]
 
         data.append({
@@ -118,8 +118,8 @@ def get_flat_price(soup):
             .strip())
 
 
-def get_flat_other_data(mid_name):
-    return mid_name.text.replace("м²", "").replace("№", "").replace("Корпус", "").replace("отделка", "").strip()
+def get_flat_other_data(other_data):
+    return other_data.text.replace("м²", "").replace("№", "").replace("Корпус", "").replace("отделка", "").strip()
 
 
 if __name__ == "__main__":
