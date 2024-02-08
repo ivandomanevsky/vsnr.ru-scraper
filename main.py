@@ -1,7 +1,7 @@
+import logging
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-import logging
 
 logging.basicConfig(filename="logging.log", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -19,9 +19,7 @@ def main():
     data = get_data(links)
 
     data = sorted(data, key=lambda x: x["complex"])
-
-    df = pd.DataFrame(data)
-    df.to_excel("result.xlsx", index=False)
+    save_to_excel(data)
 
     # Логирование о завершении работы парсера
     logging.info("Парсер успешно завершил работу")
@@ -102,24 +100,41 @@ def get_complex_name(soup):
         # Обработка ошибки NoneType
         return soup.find(class_="card-secondary__title").text
     except AttributeError:
-        return "Не указан"
+        return None
 
 
 def get_flat_type(soup):
-    title = soup.find(class_="apartment__description-title").text.lower()
-    return "Квартира" if "квартира" in title else "Кладовка" if "кладовка" in title \
-        else "Машиноместо" if "машиноместо" in title else "Апартаменты"
+    try:
+        # Обработка ошибки NoneType
+        title = soup.find(class_="apartment__description-title").text.lower()
+        return "Квартира" if "квартира" in title else "Кладовка" if "кладовка" in title \
+            else "Машиноместо" if "машиноместо" in title else "Апартаменты"
+    except AttributeError:
+        return None
 
 
 def get_flat_price(soup):
-    return (soup.find(class_="regular_64 apartment__price-sum")
-            .text.replace(" ", "")
-            .replace("₽", "")
-            .strip())
+    try:
+        # Обработка ошибки NoneType
+        return (soup.find(class_="regular_64 apartment__price-sum")
+                .text.replace(" ", "")
+                .replace("₽", "")
+                .strip())
+    except AttributeError:
+        return None
 
 
 def get_flat_other_data(other_data):
-    return other_data.text.replace("м²", "").replace("№", "").replace("Корпус", "").replace("отделка", "").strip()
+    try:
+        # Обработка ошибки NoneType
+        return other_data.text.replace("м²", "").replace("№", "").replace("Корпус", "").replace("отделка", "").strip()
+    except AttributeError:
+        return None
+
+
+def save_to_excel(data):
+    df = pd.DataFrame(data)
+    df.to_excel("result.xlsx", index=False)
 
 
 if __name__ == "__main__":
