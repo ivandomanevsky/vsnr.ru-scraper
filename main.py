@@ -84,8 +84,8 @@ def get_data(links: []) -> []:
             "type": flat_type,
             "plan": None,
             "source": link,
-            "deadline": "",
-            "ceil_height": '',
+            "deadline": None,
+            "ceil_height": None,
         })
 
         i += 1
