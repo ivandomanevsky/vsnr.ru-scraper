@@ -38,7 +38,7 @@ def get_links() -> []:
         for link in plan_soup.find_all(class_="btn-reset btn-secondary btn-secondary--arrow"):
             links.append(BASE_URL + link["href"])
 
-        # Логирование сбора ссылок
+        # Логирование о процессе сбора ссылок
         logging.info(f"Со страницы {i} собраны ссылки на недвижимость")
 
     return links
